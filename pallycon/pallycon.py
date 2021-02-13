@@ -14,10 +14,17 @@ class PallyConClient:
     The PallyCon client
 
     Usage:
-        pallycon = PallyConClient(site_id="lU5D8s3PWoLls3PWFWkClULlFWk5D8oC")
-        print("license rule:", json.dumps(pallycon.license_rule))
-        print("encrypted rule:", pallycon.encrypted_license_rule)
-        print("license_token:", pallycon.license_token)
+        client = PallyConClient(
+            site_id="TUTO",
+            site_key="lU5D8s3PWoLls3PWFWkClULlFWk5D8oC",
+            access_key="LT2FVJDp2Xr018zf4Di6lzvNOv3DKP20",
+            drm_type="Widevine",
+            user_id="test-user",
+            content_id="bigbuckbunny",
+        )
+        client.license_rule
+        client.encrypted_license_rule
+        client.license_token
     """
 
     # Initial Vector
@@ -55,6 +62,9 @@ class PallyConClient:
 
     @property
     def license_token(self) -> Dict:
+        """
+        The license token that will be used by the HTML5 Player
+        """
         return {
             "drm_type": self.drm_type,
             "site_id": self.site_id,
@@ -84,6 +94,9 @@ class PallyConClient:
         ).decode()
 
     def _sha256_encrypt(selfself, plain_text) -> str:
+        """
+        input -> sha256 -> base64 -> output
+        """
         cipher = hashlib.sha256()
         cipher.update(plain_text.encode())
         return base64.b64encode(cipher.digest()).decode()
@@ -118,17 +131,3 @@ class PallyConClient:
             + self._get_timestamp()
         )
         return self._sha256_encrypt(hash_input)
-
-
-if __name__ == "__main__":
-    pallycon = PallyConClient(
-        site_id="TUTO",
-        site_key="lU5D8s3PWoLls3PWFWkClULlFWk5D8oC",
-        access_key="LT2FVJDp2Xr018zf4Di6lzvNOv3DKP20",
-        drm_type="Widevine",
-        user_id="test-user",
-        content_id="bigbuckbunny",
-    )
-    print("license rule:", json.dumps(pallycon.license_rule))
-    print("encrypted rule:", pallycon.encrypted_license_rule)
-    print("license_token:", pallycon.license_token)
