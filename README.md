@@ -19,6 +19,9 @@ client = PallyConClient(
     drm_type="Widevine",
     user_id="test-user",
     content_id="bigbuckbunny",
+    license_rule={
+        "playback_policy": {"limit": True, "persistent": False, "duration": 3600}
+    },
 )
 
 # Get the license token

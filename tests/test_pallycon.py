@@ -14,15 +14,13 @@ def client():
         drm_type="Widevine",
         user_id="test-user",
         content_id="bigbuckbunny",
+        license_rule={
+            "playback_policy": {"limit": True, "persistent": False, "duration": 3600}
+        },
     )
 
 
 class TestPallyConClient:
-    def test_license_rule(self, client):
-        assert client.license_rule == {
-            "playback_policy": {"limit": True, "persistent": False, "duration": 3600}
-        }
-
     def test_encrypted_license_rule(self, client):
         assert (
             client.encrypted_license_rule

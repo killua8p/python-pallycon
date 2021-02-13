@@ -21,10 +21,16 @@ class PallyConClient:
             drm_type="Widevine",
             user_id="test-user",
             content_id="bigbuckbunny",
+            license_rule={
+                "playback_policy": {"limit": True, "persistent": False, "duration": 3600}
+            }
         )
         client.license_rule
         client.encrypted_license_rule
         client.license_token
+
+    * license_rule:
+    See https://pallycon.com/docs/en/multidrm/license/license-token/
     """
 
     # Initial Vector
@@ -38,6 +44,7 @@ class PallyConClient:
         drm_type: str,
         user_id: str,
         content_id: str,
+        license_rule: Dict,
     ):
         self.site_id = site_id
         self.site_key = site_key
@@ -45,16 +52,7 @@ class PallyConClient:
         self.drm_type = drm_type
         self.user_id = user_id
         self.content_id = content_id
-
-    @property
-    def license_rule(self) -> Dict:
-        return {
-            "playback_policy": {
-                "limit": True,
-                "persistent": False,
-                "duration": 3600,
-            }
-        }
+        self.license_rule = license_rule
 
     @property
     def encrypted_license_rule(self):
