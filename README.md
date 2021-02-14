@@ -1,6 +1,6 @@
 # python-pallycon
 
-The Python SDK of [Pallycon](https://pallycon.com/)
+The Python SDK for [Pallycon](https://pallycon.com/)
 
 ## Installation
 

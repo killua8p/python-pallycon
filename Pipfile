@@ -9,6 +9,8 @@ pycryptodome = "*"
 [dev-packages]
 black = "*"
 pytest = "*"
+build = "*"
+twine = "*"
 
 [requires]
 python_version = "3.8"

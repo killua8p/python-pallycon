@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pallycon.pallycon import PallyConClient
+from pallycon import PallyConClient
 
 
 @pytest.fixture()
