@@ -4,7 +4,9 @@ The Python SDK for [Pallycon](https://pallycon.com/)
 
 ## Installation
 
-TODO
+```shell script
+$ pip install python-pallycon
+```
 
 ## Usage
 
