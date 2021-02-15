@@ -57,7 +57,7 @@ class PallyConClient:
         src_file = Path(src_file).expanduser().resolve()
         dest_dir = (Path(destination).expanduser() / src_file.stem).resolve()
         packager_bin = (
-            Path(__file__).resolve().parent / "bin/PallyconPackager"
+            Path(__file__).resolve().parent / "bin/PallyConPackager"
         ).resolve()
 
         subprocess.run(
@@ -73,7 +73,7 @@ class PallyConClient:
                 "-i",
                 str(src_file),
                 "-o",
-                # PallyconPackager doesn't like space in output
+                # PallyConPackager doesn't like space in output
                 str(dest_dir).replace(" ", "_"),
                 "-f",
             ]
