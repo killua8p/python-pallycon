@@ -29,7 +29,7 @@ class TestPallyConClient:
 
     def test_license_token(self, client):
         with patch(
-            "pallycon.pallycon.PallyConClient._get_timestamp",
+            "pallycon.PallyConClient._get_timestamp",
             return_value="2019-07-17T08:57:04Z",
         ):
             assert client.license_token == {
