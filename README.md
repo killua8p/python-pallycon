@@ -28,4 +28,7 @@ client = PallyConClient(
 
 # Get the license token
 license_token = client.license_token
+
+# Package media file to DASH format
+client.package_to_dash("Test Song.mp4", "Test Song")
 ```

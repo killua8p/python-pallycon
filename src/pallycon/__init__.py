@@ -2,7 +2,9 @@ import base64
 import hashlib
 import json
 import re
+import subprocess
 from datetime import datetime
+from pathlib import Path
 from typing import Dict
 
 from Crypto.Cipher import AES
@@ -12,25 +14,6 @@ from Crypto.Util import Padding
 class PallyConClient:
     """
     The PallyCon client
-
-    Usage:
-        client = PallyConClient(
-            site_id="TUTO",
-            site_key="lU5D8s3PWoLls3PWFWkClULlFWk5D8oC",
-            access_key="LT2FVJDp2Xr018zf4Di6lzvNOv3DKP20",
-            drm_type="Widevine",
-            user_id="test-user",
-            content_id="bigbuckbunny",
-            license_rule={
-                "playback_policy": {"limit": True, "persistent": False, "duration": 3600}
-            }
-        )
-        client.license_rule
-        client.encrypted_license_rule
-        client.license_token
-
-    * license_rule:
-    See https://pallycon.com/docs/en/multidrm/license/license-token/
     """
 
     # Initial Vector
@@ -46,6 +29,17 @@ class PallyConClient:
         content_id: str,
         license_rule: Dict,
     ):
+        """
+        Constructor
+
+        :param site_id:
+        :param site_key:
+        :param access_key:
+        :param drm_type:
+        :param user_id:
+        :param content_id:
+        :param license_rule: See https://pallycon.com/docs/en/multidrm/license/license-token/
+        """
         self.site_id = site_id
         self.site_key = site_key
         self.access_key = access_key
@@ -53,6 +47,39 @@ class PallyConClient:
         self.user_id = user_id
         self.content_id = content_id
         self.license_rule = license_rule
+
+    def package_to_dash(self, src_file: str, destination: str) -> str:
+        """
+        Package the source file to DASH format
+
+        NB. This function only works in Linux (or inside a Linux container)
+        """
+        src_file = Path(src_file).expanduser().resolve()
+        dest_dir = (Path(destination).expanduser() / src_file.stem).resolve()
+        packager_bin = (
+            Path(__file__).resolve().parent / "bin/PallyconPackager"
+        ).resolve()
+
+        subprocess.run(
+            [
+                str(packager_bin),
+                "--site_id",
+                self.site_id,
+                "--access_key",
+                self.access_key,
+                "--content_id",
+                self.content_id,
+                "--dash",
+                "-i",
+                str(src_file),
+                "-o",
+                # PallyconPackager doesn't like space in output
+                str(dest_dir).replace(" ", "_"),
+                "-f",
+            ]
+        ).check_returncode()
+
+        return str(dest_dir)
 
     @property
     def encrypted_license_rule(self):
