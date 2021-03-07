@@ -118,7 +118,8 @@ class PallyConClient:
             )
         ).decode()
 
-    def _sha256_encrypt(selfself, plain_text) -> str:
+    @staticmethod
+    def _sha256_encrypt(plain_text) -> str:
         """
         input -> sha256 -> base64 -> output
         """
