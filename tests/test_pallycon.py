@@ -32,12 +32,13 @@ class TestPallyConClient:
             "pallycon.PallyConClient._get_timestamp",
             return_value="2019-07-17T08:57:04Z",
         ):
-            assert client.license_token == {
-                "drm_type": "Widevine",
-                "site_id": "TUTO",
-                "user_id": "test-user",
-                "cid": "bigbuckbunny",
-                "token": "bO9DzyQgtgfbSDWmqGgZXWZdWm7M4oZ4X0hC1hS6QNraiwLI0LwmNY+OfOh1L0KmtuH7NF1blUxep9YLWrNfSy4H/6swQW7pbjZnRqRguDQ=",
-                "timestamp": "2019-07-17T08:57:04Z",
-                "hash": "0Zef3WHBbzQAR0oGf5KXn25G1TmvB2Bkvzv+7OqIWvQ=",
-            }
+            # {
+            #     "drm_type": "Widevine",
+            #     "site_id": "TUTO",
+            #     "user_id": "test-user",
+            #     "cid": "bigbuckbunny",
+            #     "token": "bO9DzyQgtgfbSDWmqGgZXWZdWm7M4oZ4X0hC1hS6QNraiwLI0LwmNY+OfOh1L0KmtuH7NF1blUxep9YLWrNfSy4H/6swQW7pbjZnRqRguDQ=",
+            #     "timestamp": "2019-07-17T08:57:04Z",
+            #     "hash": "0Zef3WHBbzQAR0oGf5KXn25G1TmvB2Bkvzv+7OqIWvQ=",
+            # }
+            assert client.license_token == 'eyJkcm1fdHlwZSI6ICJXaWRldmluZSIsICJzaXRlX2lkIjogIlRVVE8iLCAidXNlcl9pZCI6ICJ0ZXN0LXVzZXIiLCAiY2lkIjogImJpZ2J1Y2tidW5ueSIsICJ0b2tlbiI6ICJiTzlEenlRZ3RnZmJTRFdtcUdnWlhXWmRXbTdNNG9aNFgwaEMxaFM2UU5yYWl3TEkwTHdtTlkrT2ZPaDFMMEttdHVIN05GMWJsVXhlcDlZTFdyTmZTeTRILzZzd1FXN3BialpuUnFSZ3VEUT0iLCAidGltZXN0YW1wIjogIjIwMTktMDctMTdUMDg6NTc6MDRaIiwgImhhc2giOiAiMFplZjNXSEJielFBUjBvR2Y1S1huMjVHMVRtdkIyQmt2enYrN09xSVd2UT0ifQ=='

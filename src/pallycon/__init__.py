@@ -90,7 +90,7 @@ class PallyConClient:
         """
         The license token that will be used by the HTML5 Player
         """
-        return {
+        return base64.b64encode(json.dumps({
             "drm_type": self.drm_type,
             "site_id": self.site_id,
             "user_id": self.user_id,
@@ -98,7 +98,7 @@ class PallyConClient:
             "token": self.encrypted_license_rule,
             "timestamp": self._get_timestamp(),
             "hash": self._get_hash_string(),
-        }
+        }).encode()).decode()
 
     def _aes256_encrypt(self, plain_text) -> str:
         """
