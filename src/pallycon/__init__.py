@@ -90,19 +90,23 @@ class PallyConClient:
         """
         The license token that will be used by the HTML5 Player
         """
-        return base64.b64encode(json.dumps({
-            "drm_type": self.drm_type,
-            "site_id": self.site_id,
-            "user_id": self.user_id,
-            "cid": self.content_id,
-            "token": self.encrypted_license_rule,
-            "timestamp": self._get_timestamp(),
-            "hash": self._get_hash_string(),
-        }).encode()).decode()
+        return base64.b64encode(
+            json.dumps(
+                {
+                    "drm_type": self.drm_type,
+                    "site_id": self.site_id,
+                    "user_id": self.user_id,
+                    "cid": self.content_id,
+                    "token": self.encrypted_license_rule,
+                    "timestamp": self._get_timestamp(),
+                    "hash": self._get_hash_string(),
+                }
+            ).encode()
+        ).decode()
 
     def _aes256_encrypt(self, plain_text) -> str:
         """
-        Encrypts the input using AES256 (CBC mode and PKCS#7 padding)
+        Returns base64(AES256(plain_text)) (CBC mode and PKCS#7 padding)
         """
         # create cipher config
         cipher = AES.new(self.site_key.encode(), AES.MODE_CBC, self.iv)
@@ -121,7 +125,7 @@ class PallyConClient:
     @staticmethod
     def _sha256_encrypt(plain_text) -> str:
         """
-        input -> sha256 -> base64 -> output
+        Returns base64(sha256(plain_text))
         """
         cipher = hashlib.sha256()
         cipher.update(plain_text.encode())
