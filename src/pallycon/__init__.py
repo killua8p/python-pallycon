@@ -4,6 +4,7 @@ import json
 import re
 import subprocess
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Dict
 
@@ -48,11 +49,22 @@ class PallyConClient:
         self.content_id = content_id
         self.license_rule = license_rule
 
-    def package_to_dash(self, src_file: str, destination: str) -> str:
+    class PackageType(Enum):
+        """Type of content packaging"""
+
+        NCG = "ncg"
+        CMAF = "cmaf"
+        DASH = "dash"
+        HLS = "hls"
+        HLS_NCG = "hls_ncg"
+
+    def _package(self, src_file: str, destination: str, package_type: str) -> str:
         """
-        Package the source file to DASH format
+        Package the source file to the content packaging type specified
 
         NB. This function only works in Linux (or inside a Linux container)
+
+        :param package_type: PackageType instance
         """
         src_file = Path(src_file).expanduser().resolve()
         dest_dir = (Path(destination).expanduser() / src_file.stem).resolve()
@@ -69,7 +81,7 @@ class PallyConClient:
                 self.access_key,
                 "--content_id",
                 self.content_id,
-                "--dash",
+                f"--{package_type}",
                 "-i",
                 str(src_file),
                 "-o",
@@ -80,6 +92,22 @@ class PallyConClient:
         ).check_returncode()
 
         return str(dest_dir)
+
+    def package_to_dash(self, src_file: str, destination: str) -> str:
+        """
+        A shortcut to package the source file to DASH format
+
+        NB. This function only works in Linux (or inside a Linux container)
+        """
+        self._package(src_file, destination, self.PackageType.DASH.value)
+
+    def package_to_hls(self, src_file: str, destination: str) -> str:
+        """
+        A shortcut to package the source file to HLS format
+
+        NB. This function only works in Linux (or inside a Linux container)
+        """
+        self._package(src_file, destination, self.PackageType.HLS.value)
 
     @property
     def encrypted_license_rule(self):
