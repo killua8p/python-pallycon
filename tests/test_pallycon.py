@@ -11,7 +11,7 @@ def client():
         site_id="TUTO",
         site_key="lU5D8s3PWoLls3PWFWkClULlFWk5D8oC",
         access_key="LT2FVJDp2Xr018zf4Di6lzvNOv3DKP20",
-        drm_type="Widevine",
+        drm_type=PallyConClient.DrmType.WIDEVINE.value,
         user_id="test-user",
         content_id="bigbuckbunny",
         license_rule={

@@ -49,6 +49,14 @@ class PallyConClient:
         self.content_id = content_id
         self.license_rule = license_rule
 
+    class DrmType(Enum):
+        """Type of DRM"""
+
+        NCG = "NCG"
+        WIDEVINE = "Widevine"
+        PLAYREADY = "PlayReady"
+        FAIRPLAY = "FairPlay"
+
     class PackageType(Enum):
         """Type of content packaging"""
 
