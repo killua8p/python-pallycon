@@ -107,7 +107,7 @@ class PallyConClient:
 
         NB. This function only works in Linux (or inside a Linux container)
         """
-        self._package(src_file, destination, self.PackageType.DASH.value)
+        return self._package(src_file, destination, self.PackageType.DASH.value)
 
     def package_to_hls(self, src_file: str, destination: str) -> str:
         """
@@ -115,7 +115,7 @@ class PallyConClient:
 
         NB. This function only works in Linux (or inside a Linux container)
         """
-        self._package(src_file, destination, self.PackageType.HLS.value)
+        return self._package(src_file, destination, self.PackageType.HLS.value)
 
     @property
     def encrypted_license_rule(self):
