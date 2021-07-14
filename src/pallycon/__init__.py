@@ -30,16 +30,12 @@ class PallyConClient:
         content_id: str,
         license_rule: Dict,
     ):
-        """
-        Constructor
+        """Constructor
 
-        :param site_id:
-        :param site_key:
-        :param access_key:
-        :param drm_type:
-        :param user_id:
-        :param content_id:
-        :param license_rule: See https://pallycon.com/docs/en/multidrm/license/license-token/
+        Parameters
+        ----------
+        license_rule
+            See https://pallycon.com/docs/en/multidrm/license/license-token/
         """
         self.site_id = site_id
         self.site_key = site_key
@@ -66,16 +62,34 @@ class PallyConClient:
         HLS = "hls"
         HLS_NCG = "hls_ncg"
 
-    def _package(self, src_file: str, destination: str, package_type: str) -> str:
-        """
-        Package the source file to the content packaging type specified
+    def _package(
+        self, src_file: str, destination: str, package_type: str, content_id: str = None
+    ) -> str:
+        """Package the source file to the content packaging type specified
 
         NB. This function only works in Linux (or inside a Linux container)
 
-        :param package_type: PackageType instance
+        Parameters
+        ----------
+        src_file
+            The source file path
+        destination
+            The destination directory path
+        package_type
+            The package type (enum)
+        content_id
+            The content ID (optional).
+            If specified, the destination directory name will be named after it.
+            Otherwise, the destination directory name will be derived from the src_file.
+
+        Returns
+        -------
+        str
+            The destination directory path
         """
         src_file = Path(src_file).expanduser().resolve()
-        dest_dir = (Path(destination).expanduser() / src_file.stem).resolve()
+        dir_name = content_id or src_file.stem
+        dest_dir = (Path(destination).expanduser() / dir_name).resolve()
         packager_bin = (
             Path(__file__).resolve().parent / "bin/PallyConPackager"
         ).resolve()
@@ -101,28 +115,42 @@ class PallyConClient:
 
         return str(dest_dir)
 
-    def package_to_dash(self, src_file: str, destination: str) -> str:
+    def package_to_dash(
+        self, src_file: str, destination: str, content_id: str = None
+    ) -> str:
         """
         A shortcut to package the source file to DASH format
 
         NB. This function only works in Linux (or inside a Linux container)
         """
-        return self._package(src_file, destination, self.PackageType.DASH.value)
+        return self._package(
+            src_file=src_file,
+            destination=destination,
+            package_type=self.PackageType.DASH.value,
+            content_id=content_id,
+        )
 
-    def package_to_hls(self, src_file: str, destination: str) -> str:
+    def package_to_hls(
+        self, src_file: str, destination: str, content_id: str = None
+    ) -> str:
         """
         A shortcut to package the source file to HLS format
 
         NB. This function only works in Linux (or inside a Linux container)
         """
-        return self._package(src_file, destination, self.PackageType.HLS.value)
+        return self._package(
+            src_file=src_file,
+            destination=destination,
+            package_type=self.PackageType.HLS.value,
+            content_id=content_id,
+        )
 
     @property
     def encrypted_license_rule(self):
         return self._aes256_encrypt(json.dumps(self.license_rule))
 
     @property
-    def license_token(self) -> Dict:
+    def license_token(self) -> str:
         """
         The license token that will be used by the HTML5 Player
         """
