@@ -63,7 +63,12 @@ class PallyConClient:
         HLS_NCG = "hls_ncg"
 
     def _package(
-        self, src_file: str, destination: str, package_type: str, content_id: str = None
+        self,
+        src_file: str,
+        destination: str,
+        package_type: str,
+        content_id: str = None,
+        suppress_output: bool = True,
     ) -> str:
         """Package the source file to the content packaging type specified
 
@@ -81,6 +86,8 @@ class PallyConClient:
             The content ID (optional).
             If specified, the destination directory name will be named after it.
             Otherwise, the destination directory name will be derived from the src_file.
+        suppress_output
+            whether to suppress stdout and stderr
 
         Returns
         -------
@@ -94,6 +101,14 @@ class PallyConClient:
             Path(__file__).resolve().parent / "bin/PallyConPackager"
         ).resolve()
 
+        kwargs = {}
+        if suppress_output:
+            kwargs.update(
+                {
+                    "stdout": subprocess.DEVNULL,
+                    "stderr": subprocess.DEVNULL,
+                }
+            )
         subprocess.run(
             [
                 str(packager_bin),
@@ -110,39 +125,86 @@ class PallyConClient:
                 # PallyConPackager doesn't like space in output
                 str(dest_dir).replace(" ", "_"),
                 "-f",
-            ]
+            ],
+            **kwargs,
         ).check_returncode()
 
         return str(dest_dir)
 
     def package_to_dash(
-        self, src_file: str, destination: str, content_id: str = None
+        self,
+        src_file: str,
+        destination: str,
+        content_id: str = None,
+        suppress_output: bool = True,
     ) -> str:
         """
         A shortcut to package the source file to DASH format
 
         NB. This function only works in Linux (or inside a Linux container)
+
+        Parameters
+        ----------
+        src_file
+            The source file path
+        destination
+            The destination directory path
+        content_id
+            The content ID (optional).
+            If specified, the destination directory name will be named after it.
+            Otherwise, the destination directory name will be derived from the src_file.
+        suppress_output
+            whether to suppress stdout and stderr
+
+        Returns
+        -------
+        str
+            The destination directory path
         """
         return self._package(
             src_file=src_file,
             destination=destination,
             package_type=self.PackageType.DASH.value,
             content_id=content_id,
+            suppress_output=suppress_output,
         )
 
     def package_to_hls(
-        self, src_file: str, destination: str, content_id: str = None
+        self,
+        src_file: str,
+        destination: str,
+        content_id: str = None,
+        suppress_output: bool = True,
     ) -> str:
         """
         A shortcut to package the source file to HLS format
 
         NB. This function only works in Linux (or inside a Linux container)
+
+        Parameters
+        ----------
+        src_file
+            The source file path
+        destination
+            The destination directory path
+        content_id
+            The content ID (optional).
+            If specified, the destination directory name will be named after it.
+            Otherwise, the destination directory name will be derived from the src_file.
+        suppress_output
+            whether to suppress stdout and stderr
+
+        Returns
+        -------
+        str
+            The destination directory path
         """
         return self._package(
             src_file=src_file,
             destination=destination,
             package_type=self.PackageType.HLS.value,
             content_id=content_id,
+            suppress_output=suppress_output,
         )
 
     @property
